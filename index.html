@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="js/jquery-3.1.0.js"></script>
+    <script src="js/scripts.js"></script>
+    <title>Tic Tac Toe</title>
+  </head>
+  <body>
+    <h1 class="jumbotron text-center" id="title">Let's play Tic Tac Toe!</h1>
+    <div class="container container-table">
+      <div class="row">
+        <div class="col-sm-4 rules">
+          <h3>Rules:</h3>
+          <ul>
+            <li>Click "Start" to begin.</li>
+            <li>A player will be designated to be either an "X" or an "O".</li>
+            <li>Place your mark in a box.</li>
+            <li>Whoever gets three marks in a row, wins! This can be either horizontally, vertically or diagonally.</li>
+            <li>If there are no more moves to make an no one has three marks in a row, it is a tie.</li>
+            <li>Click "Start" to play a new game.</li>
+          </ul>
+        </div>
+        <div class="col-sm-6">
+          <form id="playerNames">
+            <div class="form-group">
+              <label for="playerX">Player X:</label>
+              <input id="playerX" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+              <label for="playerO">Player O:</label>
+              <input id="playerO" class="form-control" type="text">
+            </div>
+            <button id="start" type="submit" class="btn btn-warning">Start!</button>
+          </form>
+          <div id="playerNameDisplay">
+            <h2>Game Number: <span class="gameNum"></span></h2>
+            <h2>Names:</h2>
+            <h4>X: <span class="playerXName"></span></h4>
+            <h4>O: <span class="playerOName"></span></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="gameBoard">
+      <div id="spaces" class="container container-table">
+        <div class="row">
+          <div class="col-xs-4 space" data-x="0" data-y="0"></div>
+          <div class="col-xs-4 space" data-x="0" data-y="1"></div>
+          <div class="col-xs-4 space" data-x="0" data-y="2"></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 space" data-x="1" data-y="0"></div>
+          <div class="col-xs-4 space" data-x="1" data-y="1"></div>
+          <div class="col-xs-4 space" data-x="1" data-y="2"></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 space" data-x="2" data-y="0"></div>
+          <div class="col-xs-4 space" data-x="2" data-y="1"></div>
+          <div class="col-xs-4 space" data-x="2" data-y="2"></div>
+        </div>
+      </div>
+    <h2 class="text-center">Active player: <span class="activePlayerName"></span></h2>
+  </div>
+  </body>
+</html>

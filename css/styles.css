@@ -1,0 +1,20 @@
+#title {
+  margin-top: 0;
+}
+#playerNameDisplay, #playerNames {
+  margin-left: 30%;
+}
+#playerNameDisplay, #gameBoard {
+  display:none;
+}
+
+.space {
+  border: 3px solid black;
+  height: 200px;
+  width: 200px;
+}
+
+#spaces {
+  margin-top: 40px;
+  margin-left: calc(50% - 300px);
+}
