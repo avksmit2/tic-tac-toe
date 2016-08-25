@@ -11,6 +11,7 @@ function Game(playerX, playerO) {
   this.gameNum = 0;
   this.activePlayer = playerX;
   this.squares = [];
+  this.turn = 0;
   this.gameOver = false;
   this.winner = "";
 }
@@ -21,8 +22,12 @@ Game.prototype.firstTurn = function() {
   } else {
     this.activePlayer = this.players[1];
   }
+  this.gameNum++;
+  this.gameOver = false;
+  this.winner = "";
+  this.turn = 0;
 }
-Game.prototype.clearBoard = function() {
+Game.prototype.setSquares = function() {
   this.squares = new Array(3);
   for (var x = 0; x < 3; x++) {
     this.squares[x] = new Array(3);
@@ -32,39 +37,54 @@ Game.prototype.clearBoard = function() {
   }
 }
 
-function checkWinner(a, b, c, player) {
+function checkWinner(a, b, c, mark) {
   if (!a || !b || !c) {
     return false;
   }
-  if (a === player.mark && b === player.mark && c === player.mark) {
-    return true;
-  } else {
-    return false;
+  return (a === mark && b === mark && c === mark);
+}
+Game.prototype.checkGameOver = function() {
+  var haveWinner = false;
+  for (var i = 0; i < 3; i++) {
+    if (checkWinner(this.squares[i][0].mark,
+                       this.squares[i][1].mark,
+                       this.squares[i][2].mark,
+                       this.activePlayer.mark) ||
+        checkWinner(this.squares[0][i].mark,
+                       this.squares[1][i].mark,
+                       this.squares[2][i].mark,
+                       this.activePlayer.mark)) {
+      haveWinner = true;
+    }
+  }
+  if (checkWinner(this.squares[0][0].mark,
+                   this.squares[1][1].mark,
+                   this.squares[2][2].mark,
+                   this.activePlayer.mark) ||
+    checkWinner(this.squares[2][0].mark,
+                   this.squares[1][1].mark,
+                   this.squares[0][2].mark,
+                   this.activePlayer.mark)) {
+    haveWinner = true;
+  }
+  if (haveWinner) {
+    this.gameOver = true;
+    this.activePlayer.score++;
+    this.winner = this.activePlayer;
+  } else if (this.turn === 9) {
+    this.gameOver = true;
+
   }
 }
 
-Game.prototype.checkForWinner = function() {
-  for (var x = 0; x < 3; x++) {
-    if (checkForWinner(this.squares[x][0].mark,
-                       this.squares[x][1].mark,
-                       this.squares[x][2].mark,
-                       this.activePlayer.mark) ||
-        checkForWinner(this.squares[0][x].mark,
-                       this.squares[1][x].mark,
-                       this.squares[2][x].mark,
-                       this.activePlayer.mark) ||
-        checkForWinner(this.squares[0][0].mark,
-                       this.squares[1][1].mark,
-                       this.squares[2][2].mark,
-                       this.activePlayer.mark) ||
-        checkForWinner(this.squares[2][0].mark,
-                       this.squares[1][1].mark,
-                       this.squares[0][2].mark,
-                       this.activePlayer.mark)) {
-      this.gameOver = true;
-      this.activePlayer.score++;
-      this.winner = this.activePlayer;
-    }
+Game.prototype.markSpace = function(x, y) {
+  this.squares[x][y].mark = this.activePlayer.mark;
+  this.turn++;
+  this.checkGameOver();
+  if (this.activePlayer === this.players[0]) {
+    this.activePlayer = this.players[1];
+  } else {
+    this.activePlayer = this.players[0];
   }
 }
 
@@ -75,22 +95,35 @@ $(document).ready(function() {
     var playerX = $("#playerX").val();
     var playerO = $("#playerO").val();
     if (!newGame) {
-      playerX = new Player(playerX);
-      playerO = new Player(playerO);
+      playerX = new Player(playerX, "x");
+      playerO = new Player(playerO, "o");
       newGame = new Game(playerX, playerO);
     }
     $("#playerNameDisplay").show();
-    $("#playerNames").hide();
+    $("#playerInput").hide();
+    $("#start").hide();
     $("#gameBoard").show();
-    newGame.gameNum++
     newGame.firstTurn();
-    newGame.clearBoard();
+    newGame.setSquares();
+    $("#spaces .space").text("");
     $("#playerNameDisplay .playerXName").text(playerX.name);
     $("#playerNameDisplay .playerOName").text(playerO.name);
     $("#playerNameDisplay .gameNum").text(newGame.gameNum);
     $("#gameBoard .activePlayerName").text(newGame.activePlayer.name);
   });
   $(".space").click(function() {
-    console.log($(this).data("x"));
-  })
+    if (!$(this).text()) {
+      $(this).text(newGame.activePlayer.mark);
+      newGame.markSpace($(this).data("x"), $(this).data("y"));
+      $(".activePlayerName").text(newGame.activePlayer.name);
+      if(newGame.gameOver) {
+        if(newGame.winner) {
+          alert("congrats " + newGame.winner.name);
+        } else {
+          alert("tie!!!");
+        }
+        $("#start").show();
+      }
+    }
+  });
 });
